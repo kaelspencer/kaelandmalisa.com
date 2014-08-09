@@ -97,21 +97,20 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+header {
+    width: 100%;
+    height: 55px; /* Should be the same as the line height in header .title */
+    background-color: rgb(241,238,217);
+    border-bottom: 3px solid rgb(221,218,197);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+header .title {
+    width: 100%;
+    text-align: center;
+    color: rgb(46,34,31);
+    font: 2.5em 'Helvetica Neue';
+    line-height: 55px;
+}
 
 /* ==========================================================================
    Helper classes
