@@ -23,12 +23,12 @@
     for (var i = 0; i < 3; i++) {
         $.each(images, function(i, image) {
             gallery.append('<a href="' + image.img + '_b.jpg" title="' + image.title + '"><img alt="' + image.title +
-                           '" src="' + image.img + '_m.jpg" /></a>');
+                           '" src="' + image.img + '_n.jpg" /></a>');
         });
     }
 
     gallery.justifiedGallery({
-        rowHeight : 150,
+        rowHeight : 160,
         randomize: true
     });
 }());
