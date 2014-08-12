@@ -1,5 +1,7 @@
 (function(){
-    var images = [
+    var c_PreloadChunkSize = 40;
+    var c_PreloadTimer = 1000;
+    var images = fisher_yates_shuffle([
         { img: "img/wedding/01_04_D_S_0004", title: "" },
         { img: "img/wedding/01_07_D_S_0007", title: "" },
         { img: "img/wedding/01_08_D_S_0008", title: "" },
@@ -247,19 +249,59 @@
         { img: "img/wedding/02_96_D_S_0196", title: "" },
         { img: "img/wedding/02_97_D_S_0197", title: "" },
         { img: "img/wedding/02_98_D_S_0198", title: "" },
-    ];
+    ]);
 
     var gallery = $('#gallery');
+    var imageIndex = 0;
 
-    $.each(images, function(i, image) {
-        gallery.append('<a href="' + image.img + '_b.jpg" title="' + image.title + '"><img alt="' + image.title +
-                       '" src="' + image.img + '_n.jpg" /></a>');
-    });
+    // Load the first batch immediately.
+    preload_images();
 
     gallery.justifiedGallery({
         rowHeight : 160,
-        randomize: true
     }).on('jg.complete', function () {
         gallery.find('a').swipebox();
     });
+
+    continue_preload();
+
+    // Load the next c_PreloadChunkSize images.
+    function preload_images() {
+        for (var i = 0; i < c_PreloadChunkSize && imageIndex < images.length; i++, imageIndex++) {
+            gallery.append('<a href="' + images[imageIndex].img + '_b.jpg" title="' + images[imageIndex].title + '"><img alt="' +
+                            images[imageIndex].title + '" src="' + images[imageIndex].img + '_n.jpg" /></a>');
+        }
+    }
+
+    // Recursively set a timer to call preload_images until all images have been loaded.
+    function continue_preload() {
+        if (imageIndex < images.length) {
+            setTimeout(function() {
+                preload_images();
+                gallery.justifiedGallery('norewind');
+                continue_preload();
+            }, c_PreloadTimer);
+        } else {
+            console.log('Finished loading images.');
+        }
+    }
+
+    // From https://github.com/coolaj86/knuth-shuffle
+    function fisher_yates_shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
 }());
