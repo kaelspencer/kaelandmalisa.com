@@ -253,6 +253,7 @@
 
     var gallery = $('#gallery');
     var imageIndex = 0;
+    var outstandingPreloadCount = 0;
 
     // Load the first batch immediately.
     preload_images();
@@ -268,8 +269,20 @@
     // Load the next c_PreloadChunkSize images.
     function preload_images() {
         for (var i = 0; i < c_PreloadChunkSize && imageIndex < images.length; i++, imageIndex++) {
-            gallery.append('<a href="' + images[imageIndex].img + '_b.jpg" title="' + images[imageIndex].title + '"><img alt="' +
-                            images[imageIndex].title + '" src="' + images[imageIndex].img + '_n.jpg" /></a>');
+            outstandingPreloadCount++;
+            var image = images[imageIndex];
+            $('<img />')
+                .attr('alt', image.title)
+                .attr('src', image.img + '_n.jpg')
+                .load(function() {
+                    var link = $('<a />').attr('href', image.img + '_b.jpg').attr('title', image.title).append($(this));
+                    gallery.append(link);
+                    outstandingPreloadCount--;
+                })
+                .error(function() {
+                    console.log('Error downloading image: ' + image.img);
+                    outstandingPreloadCount--;
+                });
         }
     }
 
@@ -277,8 +290,13 @@
     function continue_preload() {
         if (imageIndex < images.length) {
             setTimeout(function() {
-                preload_images();
-                gallery.justifiedGallery('norewind');
+                if (outstandingPreloadCount == 0) {
+                    preload_images();
+                    gallery.justifiedGallery('norewind');
+                } else {
+                    console.log('Skipping this preload, currently loading objects.');
+                }
+
                 continue_preload();
             }, c_PreloadTimer);
         } else {
