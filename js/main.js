@@ -259,5 +259,7 @@
     gallery.justifiedGallery({
         rowHeight : 160,
         randomize: true
+    }).on('jg.complete', function () {
+        gallery.find('a').swipebox();
     });
 }());
