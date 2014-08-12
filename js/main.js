@@ -1,6 +1,6 @@
 (function(){
     var c_PreloadChunkSize = 40;
-    var c_PreloadTimer = 1000;
+    var c_PreloadTimer = 3000;
     var images = fisher_yates_shuffle([
         { img: "img/wedding/01_04_D_S_0004", title: "" },
         { img: "img/wedding/01_07_D_S_0007", title: "" },
