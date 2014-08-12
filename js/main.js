@@ -308,7 +308,13 @@
                 continue_preload();
             }, c_PreloadTimer);
         } else {
-            console.log('Finished loading images.');
+            // All the images have started their delay load. Start a timer to update the
+            // gallery one last time. If the connection is really slow, we'll probably miss
+            // a few images from the last batch.
+            setTimeout(function() {
+                console.log('Finished loading images.');
+                gallery.justifiedGallery('norewind');
+            }, c_PreloadTimer * 2)
         }
     }
 
