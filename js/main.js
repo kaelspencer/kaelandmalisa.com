@@ -278,7 +278,7 @@
                 $('<img />')
                     .attr('alt', image.title)
                     .attr('src', image.img + '_n.jpg')
-                    .load(function() {
+                    .one('load', function() {
                         var link = $('<a />')
                             .attr('href', image.img + '_b.jpg')
                             .attr('title', image.title)
