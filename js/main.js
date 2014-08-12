@@ -256,7 +256,10 @@
     var outstandingPreloadCount = 0;
 
     // Load the first batch immediately.
-    preload_images();
+    for (var i = 0; i < c_PreloadChunkSize && imageIndex < images.length; i++, imageIndex++) {
+        gallery.append('<a href="' + images[imageIndex].img + '_b.jpg" title="' + images[imageIndex].title + '"><img alt="' +
+                        images[imageIndex].title + '" src="' + images[imageIndex].img + '_n.jpg" /></a>');
+    }
 
     gallery.justifiedGallery({
         rowHeight : 160,
