@@ -271,18 +271,23 @@
         for (var i = 0; i < c_PreloadChunkSize && imageIndex < images.length; i++, imageIndex++) {
             outstandingPreloadCount++;
             var image = images[imageIndex];
-            $('<img />')
-                .attr('alt', image.title)
-                .attr('src', image.img + '_n.jpg')
-                .load(function() {
-                    var link = $('<a />').attr('href', image.img + '_b.jpg').attr('title', image.title).append($(this));
-                    gallery.append(link);
-                    outstandingPreloadCount--;
-                })
-                .error(function() {
-                    console.log('Error downloading image: ' + image.img);
-                    outstandingPreloadCount--;
-                });
+            (function(image) {
+                $('<img />')
+                    .attr('alt', image.title)
+                    .attr('src', image.img + '_n.jpg')
+                    .load(function() {
+                        var link = $('<a />')
+                            .attr('href', image.img + '_b.jpg')
+                            .attr('title', image.title)
+                            .append($(this));
+                        gallery.append(link);
+                        outstandingPreloadCount--;
+                    })
+                    .error(function() {
+                        console.log('Error downloading image: ' + image.img);
+                        outstandingPreloadCount--;
+                    });
+            })(image);
         }
     }
 
